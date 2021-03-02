@@ -296,6 +296,16 @@ can't carry data between resources
 =======================================
 	Filter 
 
+	SecurityFilter.java
+	login.jsp
+	LoginServlet.java
+=============================
+Servlet / JSP / Filter == > based on URL and client request
+
+Listener ==> not based on URL; events
+========================================================
+
+
 
 
 	
