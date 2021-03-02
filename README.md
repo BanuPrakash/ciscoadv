@@ -65,5 +65,84 @@ Spring, Spring Boot, JPA using Hibernate ==> Web and RESTful web service
 
 	name ="Tim"; setter
 
+
+	@RequestMapping(value="/api/products")
+
+	Here "name" is a property
 	  
 ==================================
+
+@Table
+and 
+@Column
+
+@Table(name="products")
+public class Product {
+	@Column(name="pid", type="NUMERIC(10)")
+	private int id;
+	@Column(name="prd_name")
+	private String name;
+	@Column(name="amount", type="NUMERIC(12,2"))
+	private double price;
+	
+	private String category;
+=========================================
+
+	
+	@Box(name="hathway")
+	public class Channels {
+
+	}
+
+	@Retention(CLASS)
+	@interface Box {
+
+	}
+
+	Hathway settop box classloader ==> loadClass()  
+=========================================================================
+
+Java 8 streams
+==============
+
+Functional interface?
+	Any interface with only one abstract method
+
+	@FunctionalInterface
+	interface Runnable {
+		void run();
+	}
+
+	interface Sample {
+		void doTask();
+		public default void someTask() {
+			// code
+		}
+	}
+================================
+
+interface Flyable {
+	void fly();
+}
+
+class Bird implments Flyable {
+	// state and behivour
+
+	public void fly() {
+		//
+	}
+}
+
+
+Flyable f = new Bird();
+// Anonymous class
+Flyable f = new Flyable() {
+	public void fly() {
+		// code here
+	}
+};
+==============================
+ 
+
+
+
