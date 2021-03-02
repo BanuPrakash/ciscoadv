@@ -215,10 +215,87 @@ mysql> create table products (id int PRIMARY KEY AUTO_INCREMENT, name VARCHAR(10
 
  insert into products values (0, 'iPhone 12', 120000.00, 'mobile',100);
  insert into products values (0, 'Sony Bravia', 135000.00, 'tv',100);
+===========================================================
+
+ORM Hibernate, iBatis ==> JDBC ==> RDBMS
+==========================================
+
+JEE --> Java Enterprise Edition --> Web Components
+
+JEE WebComponents:
+1) Servlet
+2) JSP
+3) Filter
+4) Listener
+5) HTML, CSS and JS
+===========================================
+
+	Servlets are server side java code; they are singleton and multithreaded by default
+1) execute based on client request
+Servlet ==> Controller
+JSP ==> Presentation [ static + dynamic]
+Filter ==> Interceptor pattern [ Security / Logging / Encrption / profile /..]
+
+2) events within engine
+Listener ==> for event based execution
+==============
+
+war ==> Web Archive ==> app.war ==> engine
+
+
+web.xml
+
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>com.cisco.prj.web.LoginServlet</servlet-name>
+	</servlet>
+
+	<servlet-mapping>
+			<servlet-name>Login</servlet-name>
+			<url-pattern>/login</url-servlet>
+	</servlet-mapping>
+
+Annoation
+
+@WebServlet("/login")	
+class LoginServlet extends HttpServlet {
+
+}
+
+
+Run As => Maven Build ==> Goals: jetty:run
+
+http://localhost:8080
+
+
+	Servlet should not have presentation logic [ locus , carrier of data]
+
+	JSP ==> dynamic content [ Traditional web application]
+===================
+
+Server side redirection:
+Multi stage processing of data
+redirection happens within the engine
+
+
+Client side redirection:
+redirection is done by browser based on URL sent b server
+response.sendRedirect("index.html");
+can't carry data between resources
+===================================================
+
+	Application Logic ==> Servlet
+	Presentation logic ==> JSP
+==========================================
+	Session Tracking:
+
+	Http Protocol is a stateless protocol
+	Request and Response objects are destryoed by engine/container once response is commited.
+
+	Session Tracking ==> a mechanism to track converational state of client
+=======================================
+	Filter 
 
 
 
-
-
-
-
+	
