@@ -144,5 +144,81 @@ Flyable f = new Flyable() {
 ==============================
  
 
+OOP ==> we write methods which are tightly coupled to state of object
+
+class Account {
+	deposit(amt) { this.balance += amt; }
+	withdraw(amt) { this.balance -= amt;}
+}
+
+
+Functional style of Programming: functions which are not tightly coupled to any object
+
+High Order Functions:
+	1) Any function which accepts other functions as arguments
+	2) function return a function
+
+Commonly used HOF with streams:
+		1) filter ==> gives a subset based on predicate
+		2) map ==> transform data
+		3) reduce ==> aggregate [ max, min, avg, count, sum, ..]
+		4) forEach ==> iterate takes consumer as function
+
+
+Java 8 streams ==> from file, network, collection, database [ RxJDBC , mongodb tail]
+========================================================================================
+
+JDBC ==> Java Database connectivity
+integration API to interact with RDBMS
+
+Java provides interfaces; Database vendors provide implementation classes [jar file]
+
+1) We need to load vendor specific classes into JVM
+
+	Class.forName("driver class");
+
+	Class.forName("oracle.jdbc.OracleDriver");
+
+	Class.forName("com.mysql.jdbc.Driver");
+
+2) Establish a database Connection
+	DriverManager or DataSource
+
+	DriverManager literally opens and closes connection ==> not good for enterpirse application
+
+	DataSource ==> pool of database connection
+
+	Connection con = DriverManager.getConnection(url, username, pwd);
+
+3) interfaces to send SQL
+	a) Statement
+		SQL which doesn't depend on IN parameters
+		BAD code:
+		String query = "SELECT * FROM accounts WHERE custID='" + request.getParameter("id") + "'";
+		http://example.com/app/accountView?id=' or '1'='1
+	b) PreparedStatement
+		SQL with IN parameters
+		String query = "SELECT * FROM accounts WHERE custID=?"
+
+		pstmt.setInt(1,20);
+
+	c) CallableStatement	
+		use for StoredProcedures
+
+4) ResultSet
+	cursor to traverse thro the fetched records
+==========================================
+
+mysql> create database cisco_db;
+mysql> use cisco_db;
+mysql> create table products (id int PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100), price double, category VARCHAR(50), quantity int);
+
+ insert into products values (0, 'iPhone 12', 120000.00, 'mobile',100);
+ insert into products values (0, 'Sony Bravia', 135000.00, 'tv',100);
+
+
+
+
+
 
 
