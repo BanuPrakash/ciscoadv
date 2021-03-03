@@ -27,8 +27,8 @@ public class SecurityFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		String uri = req.getRequestURI();
-		System.out.println("uri:"  + uri);
 		HttpSession ses = req.getSession(false);
+		System.out.println("uri:"  + uri + ses.getAttribute("user"));
 		if(uri.endsWith("login.jsp") || uri.endsWith("login") || ses != null && ses.getAttribute("user") != null) {
 			chain.doFilter(request, response);
 		} else {

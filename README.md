@@ -305,7 +305,166 @@ Servlet / JSP / Filter == > based on URL and client request
 Listener ==> not based on URL; events
 ========================================================
 
+Day 2:
+------
+
+Annotation, Stream, Servlet, JSP, Filter and Listener
+HttServletRequest, HttpServletResponse, HttpSession, ServletContext
+-------------------------------------------------------------------
+
+Spring Framework and JPA using Hibernate
+----------------------------------------
+
+Dependency Injection [ Inversion Of Control]
+Spring / Guice / Play
+Spring Framework: a light weight container for building enterprise applications.
+The core container provides Dependency Injection support
+	Why use Spring?
+		==> Dependency Injection
+			Loose coupling between objects
+			Makes it easy to TEST the code.
+			Switching between differernt strategies [ Strategy Design Pattern]
+		==> EAI : Enterprise Application Integration
+			Many templates are ready made to use different technologies [ Redis, JDBC, JMS, RMI]
+		==> AOP: Aspect Oriented Programming
+				* Aspect: A concern which is not a part of main logic, but can be used along
+					with main logic. These aspects leads to code tangling and scattering
+					==> Logging
+					==> Profile
+					==> Security
+					==> Transaction
+				* JoinPoint: a place in code where an aspect is weaved
+				* Advice: BeforeAdvice, AfterAdvice, AroundAdvice, AfterThrowing, AfterReturning
+		==> Makes Web application devlopment, RESTful web services	development easy
+		...........................
+
+	XML based configuration:
+
+	interface EmployeeDao {
+			void addEmployee(Employee e);
+	}	
+
+	public class EmployeeDaoJdbcImpl implements EmployeeDao {
+		public void addEmployee(Employee e) { // JDBC Code}	
+	}
+
+	public class EmployeeDaoRedisImpl implements EmployeeDao {
+		public void addEmployee(Employee e) { // Redis Code}	
+	}
 
 
+	--
 
+	public class AppService {
+		private EmployeeDao empDao;
+
+		public AppService(EmployeeDao empDao) {
+			this.empDao = empDao;
+		}
+
+		public void doTask(Employee e) {
+			this.empDao.addEmployee(e);
+		}
+	}
+
+
+	beans.xml
+
+	<bean id="empDaoJdbc" class="pkg.EmployeeDaoJdbcImpl" />
+	<bean id="empDaoRedis" class="pkg.EmployeeDaoRedisImpl" />
+
+	<bean id="appService" class="pkg.AppService">
+			<constructor index=="0" ref="empDaoJdbc" />
+	</bean>
+
+	By default scope of bean is singleton.
+
+	Scope: Singleton, Prototype, Request and Session
+	---------------
+
+	<bean id="empDaoJdbc" class="pkg.EmployeeDaoJdbcImpl" />
+ 
+	<bean id="appService" class="pkg.AppService">
+			<constructor index=="0" ref="empDaoJdbc" />
+	</bean>
+
+	<bean id="appService" class="pkg.OtherService">
+			<constructor index=="0" ref="empDaoJdbc" />
+	</bean>
+	-------------
+
+	<bean id="empDaoJdbc" class="pkg.EmployeeDaoJdbcImpl" scope="prototype" />
+
+	<bean id="empDaoJdbc" class="pkg.EmployeeDaoJdbcImpl" scope="request" />
+----------------------------------------------------------
+
+	Setter DI:
+
+	public class AppService {
+		private EmployeeDao empDao;
+ 		
+ 		public void setDao(EmployeeDao d) {
+ 			this.empDao = d;
+ 		}
+		public void doTask(Employee e) {
+			this.empDao.addEmployee(e);
+		}
+	}
+
+	 
+
+	<bean id="empDaoJdbc" class="pkg.EmployeeDaoJdbcImpl" />
+	<bean id="empDaoRedis" class="pkg.EmployeeDaoRedisImpl" />
+
+	<bean id="appService" class="pkg.AppService">
+			<property name="dao" ref="empDaoJdbc" />
+	</bean>
+-----------------------------------------------------------------
 	
+	com.cisco  springapp 		1.0.0	jar
+-----------------------------------------------------
+
+Annotation based Metadata
+-------------------------
+	Spring container creates instances of class which has one of these annotations at class level:
+	1) @Component
+	2) @Repository
+	3) @Service
+	4) @Configuration
+	5) @Controller
+	6) @RestController
+
+
+	@Component
+	public class MyUtil {
+
+	}
+
+	Spring container creates "myUtil" object of class MyUtil
+	As in : MyUtil myUtil = new MyUtil();
+
+
+	@Repository
+	public class ProductDaoJPAImpl implments ProductDao {
+
+	}
+
+	ProductDaoJPAImpl productDaoJPAImpl = ..
+	https://github.com/spring-projects/spring-framework/blob/master/spring-jdbc/src/main/resources/org/springframework/jdbc/support/sql-error-codes.xml
+
+	catch (SQLException e) {
+			 System.out.println(e.getErrorCode());
+			throw new DaoException("unable to get products", e);
+		} 
+
+	================
+
+	Byte Code Instrumentation librries: CGLib , JavaAssist
+============
+
+When 2 instances of interface are avaialble; DI can be resolved by 
+1) placing @Primary on one the instance
+2) use @Qualifer
+@Autowired
+	@Qualifier("employeeDaoMongoDbImpl")
+	private EmployeeDao empDao;
