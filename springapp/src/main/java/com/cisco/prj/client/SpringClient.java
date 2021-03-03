@@ -17,7 +17,7 @@ public class SpringClient {
 		
 		Employee e = new Employee();
 		service.insertEmployee(e);
-		
+		service.sendEmail();
 		System.out.println("**********");
 		
 		String[] names = ctx.getBeanDefinitionNames();

@@ -464,7 +464,205 @@ Annotation based Metadata
 
 When 2 instances of interface are avaialble; DI can be resolved by 
 1) placing @Primary on one the instance
+
+
+@Repository
+@Primary
+public class EmployeeDaoJpaImpl implements EmployeeDao {
+
+
 2) use @Qualifer
-@Autowired
+	@Autowired
 	@Qualifier("employeeDaoMongoDbImpl")
 	private EmployeeDao empDao;
+
+3) Resolve using @Profile
+
+@Repository
+@Profile("prod")
+public class EmployeeDaoJpaImpl implements EmployeeDao {
+
+}
+
+Run As Run Configuration:
+ VM arguments: -Dspring.profiles.active=prod
+
+ Environment Variable:
+
+ export spring_profiles_active=prod
+
+ ---
+ Maven Profile:
+ <profiles>
+    <profile>
+        <id>profile1</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+        </properties>
+    </profile>
+    <profile>
+        <id>profile2</id>
+        <properties>
+        </properties>
+    </profile>
+    <profile>
+        <id>development</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+        </properties>
+    </profile>
+    <profile>
+        <id>production</id>
+        <properties>    
+        </properties>
+    </profile>
+</profiles>
+================================
+
+
+public class EmailService {
+	private String protocol;
+	private int port;
+
+	public EmailService(String proto, int port) {
+		this.protocol = proto;
+		this.port = port;
+	}
+
+	public String getDetails() {
+		return this.protocol + ":" + port;
+	}
+}
+==================================================
+
+ORM: Object Relational Mapping
+Object-relational mapping is a programming technique for converting data between incompatible type systems using object-oriented programming languages
+
+Java <--> Relational database
+
+Java ORM Frameworks
+=> EJB [ Oracle]
+=> Java Data Objects. [ Sun ==> Oracle]
+=> KODO [ BEA ==> Oracle]
+=> TopLink. [ Oracle]
+=> Hibernate [ JBOSS]
+
+=============
+
+JPA ==> Java Persistence API is a specification for ORM [ like interfaces]
+Hibernate, TopLink, ... are implmentations of JPA
+=====================================================
+
+JPA ==> save(entity) ==> interface
+
+Hibernate, TopLink they implment these methods
+
+saveOrUpdate()
+
+persist()
+=====================================================
+
+Why ORM?
+==> removes lots of plumbing code like connection management, Statemetents , etc
+==> Cache
+==> Dirty Checking
+==> Impedence mismatch
+==> Simplifies Development
+
+	class Customer {
+		id, name, email
+		Address address	
+	}
+
+	class Address {
+		street, city zip
+	}
+=============================
+
+
+
+ DriverManger ==> opens and closes connection when user makes a request [ latency]
+
+ DataSource ==> Pool of database connection
+ 	==> HikariCP
+ 	==> C3p0
+ 	==> commons db pool
+
+
+EntityManager ==> wrapper for database connection
+
+EntityManagerFactory ==> pool of database connection + ORM APIs
+==================================================================
+
+@Embeddable
+class PersonPK {
+	String firstName;
+	String lastName;
+}
+
+class Person {
+	@EmbeddedId
+	PersonPK pk;
+	//
+}
+=========================
+props.setProperty("hibernate.hbm2ddl.auto", "update");
+
+Hibernate Mapping to DDL operation [ CREATE, ALTER, DROP]
+=> update
+	if already table exists, map to class, any alter needs do it.
+	for Customer ==> customers tables does not exist ==> create table "customers" based on mapping
+	TOP ==> Bottom Appraoch
+=> create
+	drop tables and re-create for every application run [ good for testing]
+=> validate
+	don't create or alter table. use existing tables in DB 
+	Bottom ==> TOP approach
+=============
+
+props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+
+em.save(p);
+	==> generate SQL to MySQL8
+=======================================
+
+TransactionManager
+
+1) Programmatic Transaction
+	JDBC:
+	try {
+		con.setAutoCommit(false);  
+  		Statement stmt=con.createStatement();  
+		stmt.executeUpdate("update account === fromAccount ");  
+		stmt.executeUpdate("update account .... toAccount");
+		stmt.executeUpdate("insert into transactions(...)");  
+  		con.commit();  
+	} catch(SQLException ex) {
+		con.rollback();
+	}
+	Hibernate Tx:
+	try {  
+		session = sessionFactory.openSession();  
+		tx = session.beginTransaction();  
+			session.update(fromAccount);
+			session.update(toAccount);
+		  	session.persist(transactionData);
+	tx.commit();  
+   } catch (Exception ex) {  
+	  tx.rollback();  
+   }  
+
+2) Declarative Transaction
+	
+	@Transactional
+	public void transferFunds(Account fromAccount, Account toAccount) {
+			session.update(fromAccount);
+			session.update(toAccount);
+		  	session.persist(transactionData);
+	}
+
+	If any RuntimeException occurs in "transferFunds" rollback() else commit()
