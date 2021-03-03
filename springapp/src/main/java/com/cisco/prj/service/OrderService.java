@@ -7,13 +7,27 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cisco.prj.dao.CustomerDao;
 import com.cisco.prj.dao.ProductDao;
+import com.cisco.prj.entity.Customer;
 import com.cisco.prj.entity.Product;
 
 @Service
 public class OrderService {
 	@Autowired
 	private ProductDao productDao;
+	
+	@Autowired
+	private CustomerDao customerDao;
+	
+	@Transactional 
+	public Customer insertCustomer(Customer c) {
+		return customerDao.addCustomer(c);
+	}
+	
+	public Customer getCustomer(String email) {
+		return customerDao.getCustomer(email);
+	}
 	
 	@Transactional
 	public Product insertProduct(Product p) {
