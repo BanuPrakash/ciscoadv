@@ -16,8 +16,5 @@ public class AddCustomer {
 		
 		Customer c = new Customer("banu@gmail.com", "Banu");
 		service.insertCustomer(c);
-	 
-		
 	}
-
 }
