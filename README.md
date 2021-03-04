@@ -867,4 +867,135 @@ Spring data jpa
 			List<Product> getByRange(@Param(l") double lower, @Param("u") double upper);
 		}
 
+==================
+ install POSTMAN 
+===================
+Native Query
+JPQL
+Criteria API [Specification] ==> EntityGraphs
+===============================================
+RESTful web services:
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+
+RESTful Web services
+Representational State Transfer:
+A Resource on server can be served in various representations 
+Resource ==> database/ File / printer
+===========================================
+
+HTTP URI == > Plural Nouns to identify resource "/products" , "/customers"
+
+HTTP Methods to perform actions
+GET, POST, PUT/PATCH and DELETE for CRUD operations
+
+CREATE ==> POST
+READ ==> GET
+UPDATE ==> PUT / PATCH
+DELETE ==> DELETE
+=======================
+GET
+
+http://server/api/products
+
+to get all products
+========
+
+PATH paremeter
+
+GET
+
+http://server/api/products/4
+
+to a product whose id is 4
+
+GET
+
+http://server/api/customer/banu@gmail.com/orders
+
+get orders of a given customer
+=================
+GET
+http://server/api/products?page=1&size=10
+
+http://server/api/products?category=mobile
+
+to get subset use query params
+=========
+
+GET ==> No Payload
+======================================
+
+POST
+http://server/api/products
+
+payload contains new product resource to be added to "products" resource
+================
+
+PUT
+http://server/api/products/3
+payload contains new product resource for 3 to be modifed in "products" resource
+==========================
+DELETE
+http://server/api/products/3
+
+delete a product whose id is "3"
+=======================================
+
+GET and DELETE ==> No Payload; also IDEMPOTENT
+
+PUT and POST ==> Payload; not IDEMPOTENT
+===================================================
+
+Spring Boot RESTful Webservices support
+	1) DispatcherServlet is configured to handle all requests and integerated to use 
+	Spring container [ WebApplicationContext]
+	2) ContentNegotiationHandler / HttpMessageConverter
+		data <--> Representation [ xml / json/ csv/ atom]
+
+		HTTP Headers:
+		Accept: application/json
+		content-type:text/xml
+
+		is used by Spring boot to convert data to json
+
+		Spring Boot has configured "jackson" libraries for java < --> JSON
+		JSON: jackson, jettison, GSON, Moxy
+==========================================
+POSTMAN:
+
+POST: http://localhost:8080/api/products
+Headers:
+Accept: application/json
+Content-type: application/json
+
+Body:
+{
+    "name": "LG Microwave",
+    "price": 19000.0,
+    "quantity": 100
+}
+
+===============
+GET: http://localhost:8080/api/products
+
+GET: http://localhost:8080/api/products/3
+
+GET: http://localhost:8080/api/products?lower=10&upper=1000
+==============================================================
+OrderController
+Testing and Mockito
+================================
+
+
+
+
+
+
+
+
+
+
 

@@ -31,6 +31,7 @@ public class OrderappApplication implements CommandLineRunner {
 //		List<Product> products = service.getProducts();
 //		List<Product> products = service.byRange(100, 1000);
 		// pageNumber, recordsperpage, sort
+		/*
 		Pageable pageable = PageRequest.of(0, 2, Sort.by("price").descending());
 		
 		Page<Product> productsPage = service.getProductsPage(pageable);
@@ -40,6 +41,7 @@ public class OrderappApplication implements CommandLineRunner {
 		for(Product prd : products) {
 			System.out.println(prd.getName() + ", " + prd.getPrice());
 		}
+		*/
 	}
 
 }
