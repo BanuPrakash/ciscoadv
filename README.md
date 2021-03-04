@@ -666,3 +666,112 @@ TransactionManager
 	}
 
 	If any RuntimeException occurs in "transferFunds" rollback() else commit()
+============
+
+ListProduct.java == > OrderService ==> ProductDao ==> ProductDaoJPAImpl
+
+AddProduct.java ==> OrderService ==> ProductDao ==> ProductDaoJPAImpl
+=================
+
+Task:
+CustomerDao interface
+CustomerDaoJPAImpl
+
+class OrderService {
+	@Autowired
+	ProductDao productDao;
+
+	@Autowired
+	CustomerDao customerDao;
+}
+
+add Customer and get all customers
+======================================
+ 
+Day 3
+=====
+	ORM: Persistence Context, EntityManagerFactory, DataSource, EntityManager
+	Entity: @Entity, @Table, @Id, @Column, @Temporal, @OneToMany and @ManyToOne, @JoinColumn
+	JPQL vs SQL
+
+	Spring: Dependency Injection [ @Autowired] ==> ByteCode Instrumentation [ javaassist/ cglib]
+
+	@Component, @Repository, @Service, @Configuration and @Bean
+	===========================================================
+
+	JPA pessimistic lock using @Version
+	JPA uses a version field in your entities to detect concurrent modifications to the same datastore record
+	Optimistic Lock
+	class Product {
+		...
+		@Version
+    	private Long ver;
+	}
+	
+	Pessimistic Lock
+	@Transaction(isolation=SERIALIZABLE)
+====================================================
+
+Order
+
+	@OneToMany
+	@JoinColumn(name="order_fk")
+	private List<LineItem> items = new ArrayList<>();
+
+	Order o = new Order();
+	o.getItems().add(i1);
+	o.getItems().add(i2);
+	o.getItems().add(i3);
+
+	Entity Manager:
+		OrderDao
+			em.persist(o);
+
+		ItemDao
+			em.persist(i1);
+			em.persist(i2);
+			em.persist(i3);
+========================================
+
+
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinColumn(name="order_fk")
+	private List<LineItem> items = new ArrayList<>();
+
+	Order o = new Order();
+	o.getItems().add(i1);
+	o.getItems().add(i2);
+	o.getItems().add(i3);
+
+	Entity Manager:
+		OrderDao
+			em.persist(o); // saves order and items
+
+	no need to explicitly persist items
+
+	em.remove(o); ==> remove order and its line items
+=======================================
+	Lazy:
+	@OneToMany
+	@JoinColumn(name="order_fk")
+	private List<LineItem> items = new ArrayList<>();
+
+
+	JPQL = > "from Order"
+
+	select * from orders
+		if 5 orders exist
+
+	"from Item where order.oid = ?" ==> 1, 2, 3, 4, 5
+===========
+
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name="order_fk")
+	private List<LineItem> items = new ArrayList<>();
+
+	join tables and orders and items are fetched
+===================================
+
+ManyToOne ==> Default EAGER fetch
+OneToMany ==> Default LAZY fetch
+
