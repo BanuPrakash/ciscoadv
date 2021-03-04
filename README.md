@@ -774,4 +774,19 @@ Order
 
 ManyToOne ==> Default EAGER fetch
 OneToMany ==> Default LAZY fetch
+===========
+JPA.pdf
+===================================================
 
+Spring Web MVC Module
+MVC ==> Model View Controller
+Model ==> Business data and logic
+Controller ==> Application flow control / logic
+View ==> Presentation logic
+======================================
+
+10 min ==> look into code and execute
+index.jsp; list.jsp; ProductController.java; addProduct.jsp;
+============================================================
+
+ 
