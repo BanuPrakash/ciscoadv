@@ -990,12 +990,72 @@ Testing and Mockito
 ================================
 
 
+Day 4:
+======
 
+Spring Boot
+@SpringBootApplication ==> @ComponentScan, @EnableAutoConfiguration, @Configuration
 
+implements CommandLineRunner ==> run(...args)
+================================================
+ :@RestController, @RequestMapping, @GetMapping, @PostMapping, @PutMapping, @DeleteMapping
 
+@RequestParam, @PathVariable
 
+@ResponseBody, @RequestBody, ResponseEntity
+POSTMAN to test the REST Api
+=================================================
+JSON for Order:
+{
+		"customer" : {
+			"email" : "banu@gmail.com"
+		},
+		"items" : [
+			{"product" : {"id": 6}, "qty": 1, "amt": 13000},
+			{"product" : {"id": 1}, "qty": 1, "amt": 89000}
+		],
+		"total": 110000.00
+	}
+=====================================================
+Traditional Web Application: implments Validator ==> validate(Object target, Errors erros)
+BindingResults erros ==> <form:errors path="name" />
+===========
+Validation in RESTful Web services:
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
 
+Product.java
+	@NotBlank(message = "{name.required}")
+	private String name;
+	
+	@Min(value=10, message="Price ${validatedValue} should be more than {value}")
+	private double price;
+	
+	@Min(value = 0, message="Quantity ${validatedValue} should be more than {value}")
+	private int quantity;
 
+ProductController.java [ @Valid ]
+@PostMapping
+public ResponseEntity<Product> addProduct(@Valid @RequestBody Product p) {}
 
+OrderappApplication.java
+@Bean
+	public MessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasename("classpath:messages");
+		return messageSource;
+	}
+
+	@Bean
+	public LocalValidatorFactoryBean getValidator() {
+		LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+		bean.setValidationMessageSource(messageSource());
+		return bean;
+	}
+
+messages.properties
+name.required=Give Name :-(	
 
 

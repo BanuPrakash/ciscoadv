@@ -2,6 +2,8 @@ package com.cisco.prj.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +41,15 @@ public class ProductController {
 	// http://localhost:8080/api/products/2
 	@GetMapping("/{id}")
 	public @ResponseBody Product getProductById(@PathVariable("id") int id) {
-		return service.getProduct(id);
+		Product p = service.getProduct(id);
+		if(p == null) {
+			throw new NotFoundException("Product with " + id + " not available");
+		}
+		return p;
 	}
 
 	@PostMapping
-	public ResponseEntity<Product> addProduct(@RequestBody Product p) {
+	public ResponseEntity<Product> addProduct(@Valid @RequestBody Product p) {
 		service.addProduct(p);
 		return new ResponseEntity<Product>(p, HttpStatus.CREATED);
 	}
