@@ -19,15 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cisco.prj.entity.Product;
 import com.cisco.prj.service.OrderService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("api/products")
+@Api(value = "Product Controller")
 public class ProductController {
 	@Autowired
 	private OrderService service;
 
 	// http://localhost:8080/api/products
 	// http://localhost:8080/api/products?lower=100&upper=500
-
+	
+	@ApiOperation(value = "get all products")
 	@GetMapping
 	public @ResponseBody List<Product> getProducts(@RequestParam(name = "lower", defaultValue = "0.0") double lower,
 			@RequestParam(name = "upper", defaultValue = "0.0") double upper) {

@@ -1057,5 +1057,205 @@ OrderappApplication.java
 
 messages.properties
 name.required=Give Name :-(	
+===================================================
+
+Unit Testing RestController
+============================
+
+Spring boot provides Mockito to Mock objects /beans [ EasyMock, JMock]
+=========================================================================
+
+Rest Clients:
+RestTemplate, WebClient, ..
+
+RestTemplate:
+		getForObject ==> String JSON
+		getForEntity ==> Product, Order, Customer
+		postForEntity 
+		exchange ==> POST, GET with parameterized, PUT, DELETE
+=======================================================
+
+1) OrderController / OrderDao / OrderService ==> MAKE api calls to order / order payload
+2) Input validation using spring-boot-validation libraries
+3) ControllerAdvice for GlobalExceptionHandler
+4) Testing Controller with Mockito and @WebMvcTest, @MockMVC and @MockBean OrderService
+5) RestTemplate ==> Consume REST endpoints in java application
+========================================================================
+<dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
 
 
+application.properties
+management.endpoints.web.exposure.include=*
+management.endpoint.health.show-details=always
+
+
+localhost:8080/actuator
+
+To use Prometheus along with actuator:
+<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+</dependency>
+
+prometheus.yml
+details where to scrape thro the stats from
+
+
+Run Prometheus:
+docker run -d --name=prometheus -p 9090:9090 -v C:\prometheus\prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus --config.file=/etc/prometheus/prometheus.yml
+
+
+localhost:9090
+=============================
+
+Swagger ==> Document REST APIs
+ +include swagger dependency
+
+ +SwaggerConfig.java
+=======================================
+
+EntityGraphs
+1) get only company and departmetns
+  @NamedEntityGraph(name = "companyWithDepartmentsGraph",
+                attributeNodes = {@NamedAttributeNode("departments")})
+
+select
+        *
+    from
+        company company0_ 
+    left outer join
+        department department1_ 
+            on company0_.id=department1_.company_id 
+    where
+        company0_.id=?
+
+2) get company --> Departments ==> Employees
+
+ @NamedEntityGraph(name = "companyWithDepartmentsAndEmployeesGraph",
+                attributeNodes = {
+                		@NamedAttributeNode(value = "departments", subgraph = "departmentsWithEmployees")},
+                subgraphs = @NamedSubgraph(
+                        name = "departmentsWithEmployees",
+                        attributeNodes = @NamedAttributeNode("employees"))),
+
+3)   Company => Departments => Employees 
+							=> Office
+
+@NamedEntityGraph(name = "companyWithDepartmentsAndEmployeesAndOfficesGraph",
+                attributeNodes = {@NamedAttributeNode(value = "departments", 
+                subgraph = "departmentsWithEmployeesAndOffices")},
+                subgraphs = @NamedSubgraph(
+                        name = "departmentsWithEmployeesAndOffices",
+                        attributeNodes = {@NamedAttributeNode("employees"), @NamedAttributeNode("offices")}))
+ select
+       ...
+    from
+        company company0_ 
+    left outer join
+        department department1_ 
+            on company0_.id=department1_.company_id 
+    left outer join
+        employee employees2_ 
+            on department1_.id=employees2_.department_id 
+    left outer join
+        office offices3_ 
+            on department1_.id=offices3_.department_id 
+    where
+        company0_.id=?
+===========================
+
+NativeSQL, JPQL, EntityGraphs 
+
+CriteriaAPI ==> programmatically Query is formed using OOP
+
+JPASpecification to use CriteriaAPI
+===================================================================
+class Actor {
+	String name;
+}
+
+class Movie {
+	Actor act;
+}
+SearchCriteria("act.name","Brad",SearchOperation.MATCH)
+===================================================================
+
+HATEOAS: Hypermedia As The Extension Of Application State
+Level 3 of RESTful web services
+	
+	get Product; 
+	What Next?
+		can view details
+		can add to cart
+		can search similar products
+		can get supplier
+	Links for above should be provides along with Product
+================================================================
+Communicate between RESTful services
+
+Spring Security
+================
+
+JSON vs ProtoBuf:
+Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler
+
+message Person {
+  required string name = 1;
+  required int32 id = 2;
+  optional string email = 3;
+}
+==========================================================
+
+protobuf dependecnies:
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>3.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.protobuf-java-format</groupId>
+			<artifactId>protobuf-java-format</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+Account-service
+----------
+accounts.proto
+
+message format
+------------
+
+use protoc to generate language specific classes for the message format [ HELP.md]
+
+---------
+
+RestController produces="application/x-protobuf"
+---
+server.port=2222
+spring.application.name=account-service
+===========================================
+
+Customer service
+=====================================================================
+
+Spring Security
+
+
+@Component
+public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler{
+
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+            throws IOException, ServletException {
+        System.out.println("AuthFailureHandler.onAuthenticationFailure()");
+        redirectStrategy.sendRedirect(request, response, "/login?msg=Bad Credentials");
+    }
+}
+==================================
+{
+    "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYW51IiwiZXhwIjoxNjE0OTc1NjcxLCJpYXQiOjE2MTQ5Mzk2NzF9.KkJT3-Nb5b2uZsGMfI7L3P9QOG3taxlIomr8hao_ALo"
+}

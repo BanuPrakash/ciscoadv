@@ -39,7 +39,8 @@ public class ProductControllerTest {
 	@Test
 	public void getProductsTest() throws Exception {
 		List<Product> products = 
-				Arrays.asList(new Product(1, "a", 500.00, 100), new Product(2, "b", 1500.00, 100));
+				Arrays.asList(new Product(1, "a", 500.00, 100), 
+						new Product(2, "b", 1500.00, 100));
 		// mocking
 		when(service.getProducts()).thenReturn(products);
 

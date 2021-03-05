@@ -69,7 +69,7 @@ public class OrderappApplication implements CommandLineRunner {
 		return bean;
 	}
 
-	
+	 
 	@Autowired
 	private RestTemplate template;
 
@@ -80,19 +80,19 @@ public class OrderappApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		List<Product> products = Arrays.asList(new Product(0, "iPhone 12", 89000.00, 100),
-				new Product(0, "Reynold Pen", 15.00, 100), new Product(0, "Camlin Marker", 50, 100));
+//		List<Product> products = Arrays.asList(new Product(0, "iPhone 12", 89000.00, 100),
+//				new Product(0, "Reynold Pen", 15.00, 100), new Product(0, "Camlin Marker", 50, 100));
+//
+//		List<Customer> customers = Arrays.asList(new Customer("a@cisco.com", "Anna"),
+//				new Customer("b@cisco.com", "Bharath"));
+//
+//		for (Product p : products) {
+//			service.addProduct(p);
+//		}
 
-		List<Customer> customers = Arrays.asList(new Customer("a@cisco.com", "Anna"),
-				new Customer("b@cisco.com", "Bharath"));
-
-		for (Product p : products) {
-			service.addProduct(p);
-		}
-
-		for (Customer c : customers) {
-//			service.addCustomer(c);
-		}
+//		for (Customer c : customers) {
+////			service.addCustomer(c);
+//		}
 
 //		getProduct();
 //		getAllProducts();
@@ -128,7 +128,8 @@ public class OrderappApplication implements CommandLineRunner {
 		p.setQuantity(100);
 
 		// HttpEntity<Product> requestEntity = new HttpEntity<>(p, headers);
-		ResponseEntity<Product> productResponse = template.postForEntity("http://localhost:8080/api/products", p,
+		ResponseEntity<Product> productResponse = 
+				template.postForEntity("http://localhost:8080/api/products", p,
 				Product.class);
 		System.out.println(productResponse.getStatusCodeValue());
 		System.out.println(productResponse.getBody().getId());
@@ -142,4 +143,5 @@ public class OrderappApplication implements CommandLineRunner {
 		System.out.println(productResponse.getBody().getName());
 	}
 	
+	 
 }
